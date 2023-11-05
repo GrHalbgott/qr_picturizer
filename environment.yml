@@ -1,0 +1,4 @@
+name: qr-picturizer
+dependencies:
+  - python=3.11.*
+  - poetry
