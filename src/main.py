@@ -30,3 +30,7 @@ if __name__ == "__main__":
     else:
         img = qr_generator(input)
         img.save(path_qr)
+
+data = read_raster(img)
+
+print(data.shape)
