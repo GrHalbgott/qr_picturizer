@@ -6,10 +6,12 @@
 import logging.config
 import numpy as np
 from pathlib import Path
+from PIL import Image
 
 from modules.utils import _check_input_arguments, init_logger
 from modules.qr_generator import qr_generator
-from modules.operator import read_raster
+from modules.operator import read_raster, read_image_list, raster_enlarger
+
 
 if __name__ == "__main__":
 
@@ -18,10 +20,10 @@ if __name__ == "__main__":
     outfolder = Path("results")
     outfolder.mkdir(exist_ok=True)
 
-    name_qr = "qr_code"
-    path_qr = f"./results/{name_qr}.png"
-    name_qr_pic = "qr_code_picturized"
-    outfile = f"./results/{name_qr_pic}.png"
+    infolder = Path("data/images")
+
+    path_qr = "./results/qr_code.png"
+    outfile = "./results/qr_code_picturized.png"
 
     input, check = _check_input_arguments()
 
@@ -31,6 +33,20 @@ if __name__ == "__main__":
         img = qr_generator(input)
         img.save(path_qr)
 
-data = read_raster(img)
+    data = read_raster(path_qr)
+    logging.info(f"QR code shape: {data.shape}")
 
-print(data.shape)
+    assert infolder.exists(), "No images found in data/images. Please add images to this folder and rerun the program."
+
+    # Create image list
+    img_list = read_image_list(infolder)
+
+    # Read random image from list
+    img = read_raster(Path(infolder / np.random.choice(img_list)))
+
+    # Enlarge QR code
+    data = raster_enlarger(outfolder, img, data)
+    logging.info(f"Enlarged array shape: {data.shape}")
+
+    image = Image.fromarray(data)
+    image.save(outfile)

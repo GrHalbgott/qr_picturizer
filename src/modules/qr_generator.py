@@ -11,8 +11,8 @@ def qr_generator(text):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
+        box_size=1,
+        border=0,
     )
     qr.add_data(text)
     qr.make(fit=True)
