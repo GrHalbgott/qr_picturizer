@@ -48,3 +48,9 @@ optional arguments:
   -t Text     String | Text you want to generate a QR-Code for (e.g. hyperlink)
   -p Picture  String | Path to your generated QR code
 ```
+
+---
+
+## Footnotes
+
+Used dataset: Yi Yang and Shawn Newsam, "Bag-Of-Visual-Words and Spatial Extensions for Land-Use Classification," ACM SIGSPATIAL International Conference on Advances in Geographic Information Systems (ACM GIS), 2010.
