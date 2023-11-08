@@ -3,6 +3,8 @@
 Picturize QR codes with your own pictures!
 Create QR codes from links or text and picturize them with your pictures.
 
+![Example](./results/example.png)
+
 ## Prerequisites
 
 - [Mamba](https://mamba.readthedocs.io/en/latest/index.html) (recommended) or [Conda](https://docs.conda.io/en/latest/)
@@ -49,8 +51,11 @@ optional arguments:
   -p Picture  String | Path to your generated QR code
 ```
 
+If no arguments are found, you are requested to put in a string via input command.
+
 ---
 
 ## Footnotes
 
-Used dataset: Yi Yang and Shawn Newsam, "Bag-Of-Visual-Words and Spatial Extensions for Land-Use Classification," ACM SIGSPATIAL International Conference on Advances in Geographic Information Systems (ACM GIS), 2010.
+Used dataset:
+Yi Yang and Shawn Newsam, "Bag-Of-Visual-Words and Spatial Extensions for Land-Use Classification," ACM SIGSPATIAL International Conference on Advances in Geographic Information Systems (ACM GIS), 2010.
