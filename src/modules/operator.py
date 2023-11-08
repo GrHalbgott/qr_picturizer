@@ -5,21 +5,21 @@
 
 import os
 import numpy as np
-import rasterio as rio
 from pathlib import Path
 from PIL import Image
 
 
-def read_raster(infile):
+def read_as_rgb(infile):
     """
-    Read the input files as Numpy arrays and preprocess them
-    :param in_dem: path to input file (string)
-    :return: returns a Numpy array
+    Convert image to RGB
+    :param infile: input image
+    :return: RGB image
     """
-    with rio.open(infile) as src:
-        data = src.read(1)
+    file = Image.open(infile)
+    rgb = file.convert("RGB")
+    arr = np.asarray(rgb)
 
-    return data
+    return arr
 
 
 def read_image_list(path):
@@ -59,10 +59,15 @@ def replacer(infolder, img, data, img_list):
 
     for j in range(0, shape_y, img.shape[1]):
         for i in range(0, shape_x, img.shape[0]):
-            img = read_raster(Path(infolder / np.random.choice(img_list)))
-            if data[i, j] == 0:
-                data[i:i + img.shape[0], j:j + img.shape[1]] = img
+            img = read_as_rgb(Path(infolder / np.random.choice(img_list)))
+            # check values in axis 0, replace all dims with img
+            if data[i, j, 0] == 0:
+                data[i:i + img.shape[0], j:j + img.shape[1], 0] = img[:, :, 0]
+                data[i:i + img.shape[0], j:j + img.shape[1], 1] = img[:, :, 1]
+                data[i:i + img.shape[0], j:j + img.shape[1], 2] = img[:, :, 2]
             else:
-                data[i:i + img.shape[0], j:j + img.shape[1]] = 255
+                data[i:i + img.shape[0], j:j + img.shape[1], 0] = 255
+                data[i:i + img.shape[0], j:j + img.shape[1], 1] = 255
+                data[i:i + img.shape[0], j:j + img.shape[1], 2] = 255
 
     return data

@@ -10,7 +10,7 @@ from PIL import Image
 
 from modules.utils import _check_input_arguments, init_logger
 from modules.qr_generator import qr_generator
-from modules.operator import read_raster, read_image_list, raster_enlarger, replacer
+from modules.operator import read_as_rgb, read_image_list, raster_enlarger, replacer
 
 
 if __name__ == "__main__":
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         img = qr_generator(input)
         img.save(path_qr)
 
-    data = read_raster(path_qr)
+    data = read_as_rgb(path_qr)
     logging.info(f"QR code shape: {data.shape}")
 
     assert infolder.exists(), "No images found in data/images. Please add images to this folder and rerun the program."
@@ -44,18 +44,16 @@ if __name__ == "__main__":
     img_list = read_image_list(infolder)
 
     # Read random image from list
-    img = read_raster(Path(infolder / np.random.choice(img_list)))
+    img = read_as_rgb(Path(infolder / np.random.choice(img_list)))
     logging.info(f"Random image shape: {img.shape}")
 
     # Enlarge QR code
     logging.info("Enlarging QR code...")
-    data = raster_enlarger(outfolder, img, data)
+    data = raster_enlarger(img, data)
     logging.info(f"Enlarged array shape: {data.shape}")
 
     logging.info("Replacing QR code with images...")
     data = replacer(infolder, img, data, img_list)
-
-    np.savetxt(outfolder / "qr_picturized.txt", data)
 
     logging.info("Saving image...")
     image = Image.fromarray(data)
