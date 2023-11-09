@@ -32,6 +32,12 @@ To update the packages to their latest suitable versions (and the poetry.lock fi
 $ poetry update
 ```
 
+## Data/Images
+
+You can either provide a generated QR code or create one using text (see [run program](./README.md#run-program)).
+In both cases a QR code has to be in the `data` folder.
+The name can be specified in the [config file](./config/config.yaml).
+
 ## Run program
 
 **Example**:
