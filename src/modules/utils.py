@@ -17,30 +17,14 @@ def _check_input_arguments():
     help_msg = ""
     parser = argparse.ArgumentParser(description=help_msg, prefix_chars="-")
     parser.add_argument(
-        "-t",
-        metavar="Text",
-        dest="text",
-        help="String | Text you want to generate a QR-Code for (e.g. hyperlink)",
-    )
-    parser.add_argument(
-        "-p",
-        metavar="Picture",
-        dest="picture",
-        help="String | Path to your generated QR code",
-    )
+        "-pic",
+        action="store_true",
+        dest="checker",
+        help="Flag | Check if picture exists already. Default: False")
 
-    if len(sys.argv) > 1:
-        args = parser.parse_args()
-        text = args.text
-        picture = Path(args.picture)
-
-        if picture:
-            return picture, True
-        elif text:
-            return text, False
-    else:
-        text = input("Please enter the text you want to generate a QR-Code for: ")
-        return text, False
+    args = parser.parse_args()
+    checker = args.checker
+    return checker
 
 
 def init_logger(logging_config_file=None):
