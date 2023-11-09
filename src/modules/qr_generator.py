@@ -12,7 +12,7 @@ def qr_generator(text):
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=1,
-        border=0,
+        border=2,
     )
     qr.add_data(text)
     qr.make(fit=True)
