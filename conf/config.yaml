@@ -1,0 +1,14 @@
+# Change paths here (optional)
+data_dir: data
+out_dir: results
+images_dir: images
+
+# Change names here
+name_in_qr: qr_code.png
+name_out_qr: qr_code_picturized.png
+
+# Ignore this
+hydra:
+  output_subdir: null
+  run:
+    dir: .
