@@ -4,8 +4,9 @@ out_dir: results
 images_dir: images
 
 # Change names here
-name_in_qr: qr_code.png
-name_out_qr: qr_code_picturized.png
+name_in_img: qr_code.png
+name_out_img: qr_code_picturized.png
+replace_color: "dark" # dark or bright
 
 # Ignore this
 hydra:
