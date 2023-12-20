@@ -42,10 +42,12 @@ def raster_enlarger(img, data):
     data_ex = data.repeat(img.shape[0], axis=0).repeat(img.shape[1], axis=1)
     data_ex = np.multiply(data_ex, 255).astype(np.uint8)
 
-    return data_ex
+    data_mean = data_ex.mean()
+
+    return data_ex, data_mean
 
 
-def replacer(infolder, img, data, img_list):
+def replacer(infolder, img, data, img_list, data_mean):
     """
     Iterates through array and replaces blocks with zeros with images
     :param infolder: path to images
@@ -60,14 +62,14 @@ def replacer(infolder, img, data, img_list):
     for j in range(0, shape_y, img.shape[1]):
         for i in range(0, shape_x, img.shape[0]):
             img = read_as_rgb(Path(infolder / np.random.choice(img_list)))
-            # check values in axis 0, replace all dims with img
-            if data[i, j, 0] == 0:
+            # check values in axis 0, replace all values below mean with img, else 255
+            if data[i, j, 0] > data_mean:
                 data[i:i + img.shape[0], j:j + img.shape[1], 0] = img[:, :, 0]
                 data[i:i + img.shape[0], j:j + img.shape[1], 1] = img[:, :, 1]
                 data[i:i + img.shape[0], j:j + img.shape[1], 2] = img[:, :, 2]
             else:
-                data[i:i + img.shape[0], j:j + img.shape[1], 0] = 255
-                data[i:i + img.shape[0], j:j + img.shape[1], 1] = 255
-                data[i:i + img.shape[0], j:j + img.shape[1], 2] = 255
+                data[i:i + img.shape[0], j:j + img.shape[1], 0] = 0
+                data[i:i + img.shape[0], j:j + img.shape[1], 1] = 0
+                data[i:i + img.shape[0], j:j + img.shape[1], 2] = 0
 
     return data

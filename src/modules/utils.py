@@ -20,10 +20,11 @@ def _check_input_arguments():
         "-pic",
         action="store_true",
         dest="checker",
-        help="Flag | Check if picture exists already. Default: False")
+        help="Flag | Check if picture exists already, otherwise create QR-Code. Default: False")
 
     args = parser.parse_args()
     checker = args.checker
+
     return checker
 
 

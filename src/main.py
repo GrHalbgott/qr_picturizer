@@ -26,8 +26,8 @@ def main(cfg: DictConfig) -> None:
 
     imgdir = indir / cfg.images_dir
 
-    path_qr = indir / cfg.name_in_qr
-    outfile = outdir / cfg.name_out_qr
+    path_img = indir / cfg.name_in_img
+    outfile = outdir / cfg.name_out_img
 
     logging.info("Checking inputs...")
     checker = _check_input_arguments()
@@ -37,11 +37,11 @@ def main(cfg: DictConfig) -> None:
     else:
         text = input("Please enter the text you want to generate a QR-Code for: ")
         img = qr_generator(text)
-        img.save(path_qr)
+        img.save(path_img)
 
-    assert path_qr.exists(), "No QR code found in data. Please put it a QR code or disable the -pic flag."
+    assert path_img.exists(), "No QR code found in data. Please put it a QR code or disable the -pic flag."
 
-    data = read_as_rgb(path_qr)
+    data = read_as_rgb(path_img)
     logging.info(f"QR code shape: {data.shape}")
 
     assert imgdir.exists(), "No images found in data/images. Please add images to this folder and rerun the program."
@@ -56,11 +56,11 @@ def main(cfg: DictConfig) -> None:
 
     # Enlarge QR code
     logging.info("Enlarging QR code...")
-    data = raster_enlarger(img, data)
+    data, data_mean = raster_enlarger(img, data)
     logging.info(f"Enlarged array shape: {data.shape}")
 
     logging.info("Replacing QR code with images...")
-    data = replacer(imgdir, img, data, img_list)
+    data = replacer(imgdir, img, data, img_list, data_mean)
 
     logging.info("Saving image...")
     image = Image.fromarray(data)
