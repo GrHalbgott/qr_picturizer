@@ -39,12 +39,12 @@ def main(cfg: DictConfig) -> None:
         img = qr_generator(text)
         img.save(path_img)
 
-    assert path_img.exists(), "No QR code found in data. Please put it a QR code or disable the -pic flag."
+    assert path_img.exists(), "No image found in ./data. Please put it an image in there or disable the -pic flag."
 
     data = read_as_rgb(path_img)
-    logging.info(f"QR code shape: {data.shape}")
+    logging.info(f"Image shape: {data.shape}")
 
-    assert imgdir.exists(), "No images found in data/images. Please add images to this folder and rerun the program."
+    assert imgdir.exists(), "No images found in ./data/images. Please add images to this folder and rerun the program."
 
     # Create image list
     logging.info("Creating image list...")
@@ -55,11 +55,12 @@ def main(cfg: DictConfig) -> None:
     logging.info(f"Random image shape: {img.shape}")
 
     # Enlarge QR code
-    logging.info("Enlarging QR code...")
+    logging.info("Enlarging original image...")
     data, data_mean = raster_enlarger(img, data)
     logging.info(f"Enlarged array shape: {data.shape}")
 
-    logging.info("Replacing QR code with images...")
+    # Add images
+    logging.info("Adding images...")
     data = replacer(imgdir, img, data, img_list, data_mean, cfg.replace_color)
 
     logging.info("Saving image...")
