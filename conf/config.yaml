@@ -7,6 +7,7 @@ images_dir: images
 name_in_img: qr_code.png
 name_out_img: qr_code_picturized.png
 replace_color: "bright" # dark or bright
+width: 1200 # resulting image width
 
 # Ignore this
 hydra:

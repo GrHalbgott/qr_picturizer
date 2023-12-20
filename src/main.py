@@ -11,7 +11,7 @@ from omegaconf import DictConfig
 
 from modules.utils import _check_input_arguments, init_logger
 from modules.qr_generator import qr_generator
-from modules.operator import read_as_rgb, read_image_list, raster_enlarger, replacer
+import modules.operator as operator
 
 
 init_logger("./conf/logging_config.json")
@@ -41,31 +41,36 @@ def main(cfg: DictConfig) -> None:
 
     assert path_img.exists(), "No image found in ./data. Please put it an image in there or disable the -pic flag."
 
-    data = read_as_rgb(path_img)
+    data = operator.read_as_rgb(path_img)
     logging.info(f"Image shape: {data.shape}")
 
     assert imgdir.exists(), "No images found in ./data/images. Please add images to this folder and rerun the program."
 
     # Create image list
     logging.info("Creating image list...")
-    img_list = read_image_list(imgdir)
+    img_list = operator.read_image_list(imgdir)
 
     # Read random image from list
-    img = read_as_rgb(Path(imgdir / np.random.choice(img_list)))
+    img = operator.read_as_rgb(Path(imgdir / np.random.choice(img_list)))
     logging.info(f"Random image shape: {img.shape}")
 
     # Enlarge QR code
     logging.info("Enlarging original image...")
-    data, data_mean = raster_enlarger(img, data)
+    data, data_mean = operator.raster_enlarger(img, data)
     logging.info(f"Enlarged array shape: {data.shape}")
 
     # Add images
     logging.info("Adding images...")
-    data = replacer(imgdir, img, data, img_list, data_mean, cfg.replace_color)
+    data = operator.replacer(imgdir, img, data, img_list, data_mean, cfg.replace_color)
 
+    # Save image
     logging.info("Saving image...")
     image = Image.fromarray(data)
-    image.save(outfile)
+    if image.size[0] > cfg.width:
+        logging.info("Compressing image...")
+        image = operator.compressor(image, cfg.width)
+        logging.info(f"Compressed image shape: {image.size}, 3")
+    image.save(outfile, quality=95, optimize=True)
 
 
 if __name__ == "__main__":

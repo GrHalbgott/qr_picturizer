@@ -37,7 +37,7 @@ def raster_enlarger(img, data):
     """
     Expand the QR code using the shape of the input image
     :param data: QR code as Numpy array
-    :return: larger Numpy array
+    :return: larger Numpy array and mean value of array
     """
     data_ex = data.repeat(img.shape[0], axis=0).repeat(img.shape[1], axis=1)
     data_ex = np.multiply(data_ex, 255).astype(np.uint8)
@@ -49,10 +49,10 @@ def raster_enlarger(img, data):
 
 def replacer(infolder, img, data, img_list, data_mean, brightness):
     """
-    Iterates through array and replaces blocks with zeros with images
+    Iterates through array and replaces value blocks with images
     :param infolder: path to images
-    :param img: input image
-    :param data: QR code as Numpy array
+    :param img: image used for shape
+    :param data: original image as Numpy array
     :param img_list: list of images
     :param data_mean: mean of array values
     :param brightness: color brightness to replace (over or below mean)
@@ -86,3 +86,20 @@ def replacer(infolder, img, data, img_list, data_mean, brightness):
                     data[i:i + img.shape[0], j:j + img.shape[1], 2] = 255
 
     return data
+
+
+def compressor(image, width):
+    """
+    Compresses image
+    :param data: pillow object
+    :return: updated pillow object
+    """
+    maxwidth = width
+    width, height = image.size
+    aspectratio = width / height
+    new_height = maxwidth / aspectratio
+
+    # resize image with maxwidth and calculated maxheight
+    image = image.resize((maxwidth, round(new_height)))
+
+    return image
