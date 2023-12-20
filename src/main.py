@@ -60,7 +60,7 @@ def main(cfg: DictConfig) -> None:
     logging.info(f"Enlarged array shape: {data.shape}")
 
     logging.info("Replacing QR code with images...")
-    data = replacer(imgdir, img, data, img_list, data_mean)
+    data = replacer(imgdir, img, data, img_list, data_mean, cfg.replace_color)
 
     logging.info("Saving image...")
     image = Image.fromarray(data)

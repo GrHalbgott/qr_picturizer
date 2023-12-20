@@ -47,29 +47,42 @@ def raster_enlarger(img, data):
     return data_ex, data_mean
 
 
-def replacer(infolder, img, data, img_list, data_mean):
+def replacer(infolder, img, data, img_list, data_mean, brightness):
     """
     Iterates through array and replaces blocks with zeros with images
     :param infolder: path to images
     :param img: input image
     :param data: QR code as Numpy array
     :param img_list: list of images
+    :param data_mean: mean of array values
+    :param brightness: color brightness to replace (over or below mean)
     :return: updated Numpy array
     """
     shape_x = data.shape[0]
     shape_y = data.shape[1]
 
+    # iterate through array and replace values
     for j in range(0, shape_y, img.shape[1]):
         for i in range(0, shape_x, img.shape[0]):
             img = read_as_rgb(Path(infolder / np.random.choice(img_list)))
-            # check values in axis 0, replace all values below mean with img, else 255
-            if data[i, j, 0] > data_mean:
-                data[i:i + img.shape[0], j:j + img.shape[1], 0] = img[:, :, 0]
-                data[i:i + img.shape[0], j:j + img.shape[1], 1] = img[:, :, 1]
-                data[i:i + img.shape[0], j:j + img.shape[1], 2] = img[:, :, 2]
-            else:
-                data[i:i + img.shape[0], j:j + img.shape[1], 0] = 0
-                data[i:i + img.shape[0], j:j + img.shape[1], 1] = 0
-                data[i:i + img.shape[0], j:j + img.shape[1], 2] = 0
+            # replace values in square on all bands according to brightness
+            if brightness == "bright":
+                if data[i, j, 0] > data_mean:
+                    data[i:i + img.shape[0], j:j + img.shape[1], 0] = img[:, :, 0]
+                    data[i:i + img.shape[0], j:j + img.shape[1], 1] = img[:, :, 1]
+                    data[i:i + img.shape[0], j:j + img.shape[1], 2] = img[:, :, 2]
+                else:
+                    data[i:i + img.shape[0], j:j + img.shape[1], 0] = 0
+                    data[i:i + img.shape[0], j:j + img.shape[1], 1] = 0
+                    data[i:i + img.shape[0], j:j + img.shape[1], 2] = 0
+            elif brightness == "dark":
+                if data[i, j, 0] < data_mean:
+                    data[i:i + img.shape[0], j:j + img.shape[1], 0] = img[:, :, 0]
+                    data[i:i + img.shape[0], j:j + img.shape[1], 1] = img[:, :, 1]
+                    data[i:i + img.shape[0], j:j + img.shape[1], 2] = img[:, :, 2]
+                else:
+                    data[i:i + img.shape[0], j:j + img.shape[1], 0] = 255
+                    data[i:i + img.shape[0], j:j + img.shape[1], 1] = 255
+                    data[i:i + img.shape[0], j:j + img.shape[1], 2] = 255
 
     return data
