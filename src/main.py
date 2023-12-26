@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 """Picturize QR codes"""
 
-import hydra
+import yaml
 import logging.config
 import numpy as np
 from pathlib import Path
 from PIL import Image
-from omegaconf import DictConfig
 
 from modules.utils import _check_input_arguments, init_logger
 from modules.qr_generator import qr_generator
@@ -17,26 +16,30 @@ import modules.operator as operator
 init_logger("./conf/logging_config.json")
 
 
-@hydra.main(version_base=None, config_path='../conf', config_name='config')
-def main(cfg: DictConfig) -> None:
+def main():
     """Main function"""
-    indir = Path(cfg.data_dir)
-    outdir = Path(cfg.out_dir)
+    with open("./conf/config.yaml", "r") as yaml_file:
+        config = yaml.safe_load(yaml_file)
+    with open("./conf/params.yaml", "r") as yaml_file:
+        params = yaml.safe_load(yaml_file)
+
+    indir = Path(config["data_dir"])
+    outdir = Path(config["out_dir"])
     outdir.mkdir(exist_ok=True)
 
-    imgdir = indir / cfg.images_dir
+    imgdir = indir / config["images_dir"]
 
-    path_img = indir / cfg.name_in_img
-    outfile = outdir / cfg.name_out_img
+    outfile = outdir / params["name_out_img"]
 
-    logging.info("Checking inputs...")
     checker = _check_input_arguments()
 
     if checker:
+        path_img = indir / params["name_in_img"]
         pass
     else:
         text = input("Please enter the text you want to generate a QR-Code for: ")
         img = qr_generator(text)
+        path_img = indir / params["name_gen_qr"]
         img.save(path_img)
 
     assert path_img.exists(), "No image found in ./data. Please put it an image in there or disable the -pic flag."
@@ -61,14 +64,15 @@ def main(cfg: DictConfig) -> None:
 
     # Add images
     logging.info("Adding images...")
-    data = operator.replacer(imgdir, img, data, img_list, data_mean, cfg.replace_color)
+    data = operator.replacer(imgdir, img, data, img_list, data_mean, params["replace_color"])
 
     # Save image
     logging.info("Saving image...")
     image = Image.fromarray(data)
-    if image.size[0] > cfg.width:
+    maxwidth = params["width"]
+    if image.size[0] > maxwidth:
         logging.info("Compressing image...")
-        image = operator.compressor(image, cfg.width)
+        image = operator.compressor(image, maxwidth)
         logging.info(f"Compressed image shape: {image.size}, 3")
     image.save(outfile, quality=95, optimize=True)
 

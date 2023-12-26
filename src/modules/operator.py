@@ -88,13 +88,12 @@ def replacer(infolder, img, data, img_list, data_mean, brightness):
     return data
 
 
-def compressor(image, width):
+def compressor(image, maxwidth):
     """
     Compresses image
     :param data: pillow object
     :return: updated pillow object
     """
-    maxwidth = width
     width, height = image.size
     aspectratio = width / height
     new_height = maxwidth / aspectratio

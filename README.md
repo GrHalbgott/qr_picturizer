@@ -1,7 +1,7 @@
-# qr_picturizer
+# QR picturizer (fun project - experimental)
 
 Picturize QR codes with your own pictures!
-Create QR codes from links or text and picturize them with your pictures.
+Use either existing codes or create them on-the-fly from links or text and picturize them with your pictures.
 
 ![Example](./results/example.png)
 
@@ -36,25 +36,22 @@ $ poetry update
 
 You can either provide a generated QR code or create one using text (see [run program](./README.md#run-program)).
 In both cases a QR code has to be in the `data` folder.
-The name can be specified in the [config file](./config/config.yaml).
+The name can be specified in the [params file](./config/params.yaml).
 
 ## Run program
 
-**Example**:
-```console
-$ python src/main.py -t https://github.com/GrHalbgott/qr_picturizer.git
-```
 **Usage**:
+
 ```console
-$ python .\src\main.py -h
+$ python src/main.py -h
 
-usage: main.py [-h] [-t Text] [-p Picture]
+usage: main.py [-h] [-pic]
 
--h, --help  show this help message and exit
+Picturize QR codes with your own pictures! Just specify if you want to use your own QR code or create one.
 
-optional arguments:
-  -t Text     String | Text you want to generate a QR-Code for (e.g. hyperlink)
-  -p Picture  String | Path to your generated QR code
+options:
+  -h, --help  show this help message and exit
+  -pic        Flag | Use if you provide a QR code, otherwise create one. Default: False
 ```
 
 If no arguments are found, you are requested to put in a string via input command.

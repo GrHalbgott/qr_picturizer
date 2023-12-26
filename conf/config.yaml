@@ -1,16 +1,4 @@
-# Change paths here (optional)
+# paths
 data_dir: data
 out_dir: results
 images_dir: images
-
-# Change names here
-name_in_img: qr_code.png # if you have an image, use -pic flag
-name_out_img: qr_code_picturized.png # name of resulting file
-width: 1200 # maximal width of resulting image
-replace_color: "bright" # replace dark or bright colors in image?
-
-# Ignore this
-hydra:
-  output_subdir: null
-  run:
-    dir: .
