@@ -1,7 +1,7 @@
 # Change parameters here
 
 # name of existing code - use -pic flag
-name_in_img: qr_code.png
+name_in_img: qr-code.png
 
 # name of the generated qr code
 name_gen_qr: test_qr_code.png

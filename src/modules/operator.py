@@ -33,6 +33,23 @@ def read_image_list(path):
     return img_list
 
 
+def compressor(image, maxwidth):
+    """
+    Compresses image
+    :param image: pillow object
+    :param maxwidth: desired width of image
+    :return: updated pillow object
+    """
+    width, height = image.size
+    aspectratio = width / height
+    new_height = maxwidth / aspectratio
+
+    # resize image with maxwidth and calculated maxheight
+    image = image.resize((maxwidth, round(new_height)))
+
+    return image
+
+
 def raster_enlarger(img, data):
     """
     Expand the QR code using the shape of the input image
@@ -86,19 +103,3 @@ def replacer(infolder, img, data, img_list, data_mean, brightness):
                     data[i:i + img.shape[0], j:j + img.shape[1], 2] = 255
 
     return data
-
-
-def compressor(image, maxwidth):
-    """
-    Compresses image
-    :param data: pillow object
-    :return: updated pillow object
-    """
-    width, height = image.size
-    aspectratio = width / height
-    new_height = maxwidth / aspectratio
-
-    # resize image with maxwidth and calculated maxheight
-    image = image.resize((maxwidth, round(new_height)))
-
-    return image

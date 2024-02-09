@@ -49,6 +49,11 @@ def main():
 
     assert imgdir.exists(), "No images found in ./data/images. Please add images to this folder and rerun the program."
 
+    # Compress image for processing
+    logging.info("Compressing image...")
+    data = operator.compressor(data, params["width"])
+    logging.info(f"Compressed image shape: {data.size}, 3")
+
     # Create image list
     logging.info("Creating image list...")
     img_list = operator.read_image_list(imgdir)
@@ -71,7 +76,7 @@ def main():
     image = Image.fromarray(data)
     maxwidth = params["width"]
     if image.size[0] > maxwidth:
-        logging.info("Compressing image...")
+        logging.info("Compressing picturized image...")
         image = operator.compressor(image, maxwidth)
         logging.info(f"Compressed image shape: {image.size}, 3")
     image.save(outfile, quality=95, optimize=True)
